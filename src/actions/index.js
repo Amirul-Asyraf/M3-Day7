@@ -77,3 +77,23 @@ export const addUser = (data) => (dispatch) => {
         });
     }
 }
+
+export const checkUser = (data) => (dispatch) => {
+    try{
+        dispatch({
+            type: type.CHECK_USER,
+        });
+        setTimeout(() => {
+            dispatch({
+                type: type.CHECK_USER_SUCCESS,
+                payload: data,
+            })
+        }, 3000);
+    }
+    catch(error) {
+        dispatch({
+            type: type.CHECK_USER_FAIL,
+            error: error
+        });
+    }
+}
