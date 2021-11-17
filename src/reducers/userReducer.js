@@ -1,13 +1,15 @@
 import * as type from '../types';
 
-const defaultState = {
+const defaultState = () => ({
     isLoading: false,
     data: [],
     error: null,
     active: false,
-};
+});
 
 const userReducer = (state, action) => {
+    if (state === undefined) { return defaultState(); }
+
     switch(action.type) {
         case type.ADD_USER:
             console.log([...state.data]);
@@ -43,7 +45,8 @@ const userReducer = (state, action) => {
         case type.CHECK_USER_SUCCESS:
             return {
                 isLoading: false,
-                data: state.data.map(data => (data.username === action.payload.username) && (data.password === action.payload.password)),
+                // data: state.data.map(data => (data.username === action.payload.username) && (data.password === action.payload.password)),
+                data: [...state.data, action.payload],
                 error: null,
                 active: 1,
             };
@@ -55,7 +58,7 @@ const userReducer = (state, action) => {
                 active: 0,
         };
         default:
-            return defaultState;
+            return state;
     }
 }
 

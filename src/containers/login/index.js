@@ -8,6 +8,13 @@ import classes from './login.module.css';
 
 class Login extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            state: false
+        }
+    }
+
     componentDidUpdate(prevProps) {
         const {userData} = this.props;
 
@@ -25,23 +32,28 @@ class Login extends React.Component {
     checkUser() {
         const usernameVal = this._usernameEle.value;
         const pwdVal = this._pwdEle.value;
-        if((usernameVal !== '') && (pwdVal !== '')) {
-            const data = {
-                username: usernameVal,
-                password: pwdVal,
-                key: Date.now(),
-            }
-            this.props.checkUser(data);
-            console.log(data);
-            
-            this._usernameEle.value = '';
-            this._pwdEle.value = '';
-        }
+        const dataName = this.props.userData.data.map((list) => {
+            if(list.username === usernameVal && list.password === pwdVal) {
+                this.setState({status: true});
+                // window.location.href="/home";
+            } //else {
+                //alert("Username/Password is invalid");
+            })   
+            //}})
+        
+        this._usernameEle.value = '';
+        this._pwdEle.value = '';
     }
 
     render() {
+
+        if(this.state.status === true) {
+            window.location.href="/home";
+        }
+
         return(
             <Container className={classes.login_container}>
+                
                 <h1>Login</h1>
                 <Form onSubmit={e => {e.preventDefault()}}>
                     <Form.Group className="mb-3" controlId="formBasicUsername">
@@ -57,7 +69,8 @@ class Login extends React.Component {
                         <Form.Control type="password" placeholder="Password" ref={(ele) => (this._pwdEle = ele)}/>
                     </Form.Group>
                     <Button variant="primary" type="submit" onClick={() => {this.checkUser()}} >
-                        <Link to="/home" style={{color: "#FFFFFF", textDecoration: "none"}}>Submit</Link>
+                        {/* <Link to="/home" style={{color: "#FFFFFF", textDecoration: "none"}}>Submit</Link> */}
+                        Submit
                     </Button>
                     <br /><br />
                     <p>Don't have an account? <br /> <Link to='/registration'>Sign Up here</Link></p>
@@ -67,4 +80,12 @@ class Login extends React.Component {
     }
 }
 
-export default Login;
+const mapStateToProps = (state) => ({
+    userData: state.user,
+});
+
+const mapDispatchToProps = {
+    checkUser: checkUser, 
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
